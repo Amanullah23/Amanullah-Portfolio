@@ -36,6 +36,15 @@ const categories: SkillCategory[] = [
     ],
   },
   {
+    title: "Network & Infrastructure",
+    skills: [
+      { name: "VSAT Satellite Internet", level: 90 },
+      { name: "Mikrotik", level: 85 },
+      { name: "Nano Station / TP-Link", level: 80 },
+      { name: "CCNA Certified", level: 80 },
+    ],
+  },
+  {
     title: "Tools & Platforms",
     skills: [
       { name: "Git / GitHub", level: 90 },
@@ -127,9 +136,9 @@ export default function Skills() {
               margin: "0 auto",
             }}
           >
-            Placeholder intro: a mix of technical skills built through hands-on
-            project work and leadership skills built through managing teams and
-            clients.
+            A mix of software development, network infrastructure, and
+            leadership skills built through hands-on project work and managing
+            teams and clients.
           </p>
         </motion.div>
 

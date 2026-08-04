@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 const fadeUp = (i: number) => ({
   hidden: { opacity: 0, y: 24 },
@@ -95,14 +96,11 @@ export default function Hero() {
   return (
     <section
       style={{
+        position: "relative",
         minHeight: "100vh",
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
         padding: "140px 24px 80px",
-        position: "relative",
         overflow: "hidden",
       }}
     >
@@ -112,7 +110,7 @@ export default function Hero() {
           top: "-100px",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "700px",
+          width: "900px",
           height: "500px",
           background:
             "radial-gradient(ellipse, rgba(5,150,105,0.15) 0%, transparent 70%)",
@@ -125,206 +123,239 @@ export default function Hero() {
         style={{
           position: "relative",
           zIndex: 1,
-          maxWidth: "720px",
+          maxWidth: "1080px",
           margin: "0 auto",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "56px",
+          flexWrap: "wrap-reverse",
         }}
       >
+        {/* Text column */}
         <motion.div
-          variants={fadeUp(0)}
-          initial="hidden"
-          animate="show"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          style={{ flex: "1 1 480px", textAlign: "center", maxWidth: "620px" }}
+        >
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "rgba(5,150,105,0.12)",
+              border: "1px solid rgba(5,150,105,0.3)",
+              borderRadius: "9999px",
+              padding: "6px 16px",
+              marginBottom: "28px",
+            }}
+          >
+            <span
+              style={{
+                width: "7px",
+                height: "7px",
+                background: "#059669",
+                borderRadius: "50%",
+                boxShadow: "0 0 8px rgba(5,150,105,0.8)",
+              }}
+            />
+            <span
+              style={{ fontSize: "13px", color: "#34D399", fontWeight: 500 }}
+            >
+              Open to freelance & remote work
+            </span>
+          </div>
+
+          <h1
+            style={{
+              fontSize: "clamp(34px, 5vw, 54px)",
+              fontWeight: 700,
+              color: "var(--text-primary)",
+              lineHeight: 1.15,
+              letterSpacing: "-1.5px",
+              margin: "0 0 20px",
+            }}
+          >
+            Hi, I&apos;m{" "}
+            <span style={{ color: "#059669" }}>Amanullah Yawari</span>
+          </h1>
+
+          <p
+            style={{
+              fontSize: "17px",
+              color: "var(--text-secondary)",
+              lineHeight: 1.7,
+              margin: "0 auto 36px",
+              maxWidth: "520px",
+            }}
+          >
+            Senior Full Stack Developer & Founder. I lead a software development
+            team as Technical Manager at Quika, and independently design, build,
+            and ship my own products — from marketplaces to travel platforms —
+            end to end.
+          </p>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "12px",
+              marginBottom: "36px",
+              flexWrap: "wrap",
+            }}
+          >
+            <Link
+              href="#projects"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "#059669",
+                color: "white",
+                fontSize: "15px",
+                fontWeight: 600,
+                padding: "14px 28px",
+                borderRadius: "9999px",
+                textDecoration: "none",
+                boxShadow: "0 0 24px rgba(5,150,105,0.45)",
+                transition: "all 0.2s ease",
+              }}
+            >
+              View My Work
+            </Link>
+
+            <Link
+              href="/resume.pdf"
+              target="_blank"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "var(--card-bg)",
+                border: "1px solid var(--card-border)",
+                color: "var(--text-primary)",
+                fontSize: "15px",
+                fontWeight: 500,
+                padding: "14px 28px",
+                borderRadius: "9999px",
+                textDecoration: "none",
+                transition: "all 0.2s ease",
+              }}
+            >
+              Download Resume
+            </Link>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              flexWrap: "wrap",
+              marginBottom: "32px",
+            }}
+          >
+            {badges.map((b) => (
+              <div
+                key={b.label}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: "var(--card-bg)",
+                  border: "1px solid var(--card-border)",
+                  borderRadius: "9999px",
+                  padding: "6px 14px",
+                }}
+              >
+                {b.icon}
+                <span
+                  style={{ fontSize: "12px", color: "var(--text-secondary)" }}
+                >
+                  {b.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+            }}
+          >
+            {[
+              {
+                icon: <GitHubIcon size={17} />,
+                href: "https://github.com/Amanullah23",
+              },
+              { icon: <LinkedinIcon size={17} />, href: "#" },
+              {
+                icon: <WhatsappIcon size={17} />,
+                href: "https://wa.me/93787484323",
+              },
+            ].map((s, idx) => (
+              <Link
+                key={idx}
+                href={s.href}
+                target="_blank"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "var(--card-bg)",
+                  border: "1px solid var(--card-border)",
+                  borderRadius: "9999px",
+                  color: "var(--text-secondary)",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {s.icon}
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Photo column */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
           style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            background: "rgba(5,150,105,0.12)",
-            border: "1px solid rgba(5,150,105,0.3)",
-            borderRadius: "9999px",
-            padding: "6px 16px",
-            marginBottom: "28px",
+            flex: "0 1 300px",
+            display: "flex",
+            justifyContent: "center",
           }}
         >
           <div
             style={{
-              width: "7px",
-              height: "7px",
-              background: "#059669",
+              position: "relative",
+              width: "260px",
+              height: "260px",
               borderRadius: "50%",
-              boxShadow: "0 0 8px rgba(5,150,105,0.8)",
-            }}
-          />
-          <span style={{ fontSize: "13px", color: "#34D399", fontWeight: 500 }}>
-            Open to freelance & remote work
-          </span>
-        </motion.div>
-
-        <motion.h1
-          variants={fadeUp(1)}
-          initial="hidden"
-          animate="show"
-          style={{
-            fontSize: "clamp(38px, 6vw, 60px)",
-            fontWeight: 700,
-            color: "var(--text-primary)",
-            lineHeight: 1.13,
-            letterSpacing: "-1.5px",
-            margin: "0 0 20px",
-          }}
-        >
-          Hi, I'm <span style={{ color: "#059669" }}>Amanullah Yawari</span>
-        </motion.h1>
-
-        <motion.p
-          variants={fadeUp(2)}
-          initial="hidden"
-          animate="show"
-          style={{
-            fontSize: "18px",
-            color: "var(--text-secondary)",
-            lineHeight: 1.7,
-            margin: "0 auto 40px",
-            maxWidth: "560px",
-          }}
-        >
-          Senior Full Stack Developer & Founder. I lead a software development
-          team as Technical Manager at Quika, and independently design, build,
-          and ship my own products — from marketplaces to travel platforms — end
-          to end.
-        </motion.p>
-
-        <motion.div
-          variants={fadeUp(3)}
-          initial="hidden"
-          animate="show"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "12px",
-            marginBottom: "40px",
-            flexWrap: "wrap",
-          }}
-        >
-          <Link
-            href="#projects"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              background: "#059669",
-              color: "white",
-              fontSize: "15px",
-              fontWeight: 600,
-              padding: "14px 28px",
-              borderRadius: "9999px",
-              textDecoration: "none",
-              boxShadow: "0 0 24px rgba(5,150,105,0.45)",
-              transition: "all 0.2s ease",
+              overflow: "hidden",
+              border: "3px solid rgba(5,150,105,0.4)",
+              boxShadow: "0 0 50px rgba(5,150,105,0.25)",
+              flexShrink: 0,
             }}
           >
-            View My Work
-          </Link>
-
-          <Link
-            href="/resume.pdf"
-            target="_blank"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              background: "var(--card-bg)",
-              border: "1px solid var(--card-border)",
-              color: "var(--text-primary)",
-              fontSize: "15px",
-              fontWeight: 500,
-              padding: "14px 28px",
-              borderRadius: "9999px",
-              textDecoration: "none",
-              transition: "all 0.2s ease",
-            }}
-          >
-            Download Resume
-          </Link>
-        </motion.div>
-
-        <motion.div
-          variants={fadeUp(4)}
-          initial="hidden"
-          animate="show"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "8px",
-            flexWrap: "wrap",
-            marginBottom: "48px",
-          }}
-        >
-          {badges.map((b) => (
-            <div
-              key={b.label}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
-                borderRadius: "9999px",
-                padding: "6px 14px",
-              }}
-            >
-              {b.icon}
-              <span
-                style={{ fontSize: "12px", color: "var(--text-secondary)" }}
-              >
-                {b.label}
-              </span>
-            </div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          variants={fadeUp(5)}
-          initial="hidden"
-          animate="show"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "10px",
-          }}
-        >
-          {[
-            {
-              icon: <GitHubIcon size={17} />,
-              href: "https://github.com/Amanullah23",
-            },
-            { icon: <LinkedinIcon size={17} />, href: "#" },
-            {
-              icon: <WhatsappIcon size={17} />,
-              href: "https://wa.me/93787484323",
-            },
-          ].map((s, idx) => (
-            <Link
-              key={idx}
-              href={s.href}
-              target="_blank"
-              style={{
-                width: "40px",
-                height: "40px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
-                borderRadius: "9999px",
-                color: "var(--text-secondary)",
-                transition: "all 0.2s ease",
-              }}
-            >
-              {s.icon}
-            </Link>
-          ))}
+            <Image
+              src="/images/profile.jpg"
+              alt="Amanullah Yawari"
+              fill
+              sizes="260px"
+              style={{ objectFit: "cover" }}
+              priority
+            />
+          </div>
         </motion.div>
       </div>
     </section>
