@@ -236,7 +236,7 @@ export default function Header() {
 
           {/* Hire Me pill button */}
           <Link
-            href="#contact"
+            href={isHome ? "#contact" : "/"}
             onClick={(e) => {
               if (isHome) {
                 scrollToSection(e, "contact");
@@ -339,7 +339,7 @@ export default function Header() {
             })}
             <div style={{ padding: "12px 16px" }}>
               <Link
-                href="#contact"
+                href={isHome ? "#contact" : "/"}
                 onClick={(e) => {
                   setMobileOpen(false);
                   if (isHome) {
