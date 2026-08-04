@@ -53,7 +53,7 @@ export default function LoginPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "24px",
+        padding: "16px",
         position: "relative",
         overflow: "hidden",
       }}
@@ -66,6 +66,7 @@ export default function LoginPage() {
           transform: "translateX(-50%)",
           width: "600px",
           height: "500px",
+          maxWidth: "100vw",
           background:
             "radial-gradient(ellipse, rgba(5,150,105,0.15) 0%, transparent 70%)",
           pointerEvents: "none",
@@ -74,6 +75,7 @@ export default function LoginPage() {
       />
 
       <div
+        className="login-card"
         style={{
           position: "relative",
           zIndex: 1,
@@ -104,6 +106,7 @@ export default function LoginPage() {
               alignItems: "center",
               justifyContent: "center",
               marginBottom: "16px",
+              flexShrink: 0,
             }}
           >
             <LockIcon />
@@ -114,6 +117,7 @@ export default function LoginPage() {
               fontWeight: 700,
               color: "var(--text-primary)",
               margin: "0 0 6px",
+              textAlign: "center",
             }}
           >
             Admin Login
@@ -154,7 +158,7 @@ export default function LoginPage() {
               style={{
                 width: "100%",
                 padding: "12px 14px",
-                fontSize: "14px",
+                fontSize: "16px",
                 color: "var(--text-primary)",
                 background: "var(--input-bg)",
                 border: "1px solid var(--input-border)",
@@ -184,7 +188,7 @@ export default function LoginPage() {
               style={{
                 width: "100%",
                 padding: "12px 14px",
-                fontSize: "14px",
+                fontSize: "16px",
                 color: "var(--text-primary)",
                 background: "var(--input-bg)",
                 border: "1px solid var(--input-border)",
@@ -221,6 +225,15 @@ export default function LoginPage() {
           </button>
         </form>
       </div>
+
+      <style>{`
+        @media (max-width: 420px) {
+          .login-card {
+            padding: 28px 20px !important;
+            border-radius: 16px !important;
+          }
+        }
+      `}</style>
     </main>
   );
 }

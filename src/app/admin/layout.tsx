@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useState } from "react";
 import { useTheme } from "@/lib/theme-context";
 import { createClient } from "@/lib/supabase/client";
 
@@ -101,6 +102,32 @@ const MoonIcon = () => (
   </svg>
 );
 
+const MenuIcon = () => (
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <path d="M3 12h18M3 6h18M3 18h18" />
+  </svg>
+);
+
+const XIcon = () => (
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+  >
+    <path d="M18 6L6 18M6 6l12 12" />
+  </svg>
+);
+
 const navItems = [
   { label: "Overview", href: "/admin", icon: <HomeIcon /> },
   { label: "Experience", href: "/admin/experience", icon: <BriefcaseIcon /> },
@@ -116,6 +143,7 @@ export default function AdminLayout({
   const pathname = usePathname();
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   if (pathname === "/admin/login") {
     return <>{children}</>;
@@ -128,9 +156,129 @@ export default function AdminLayout({
     router.refresh();
   }
 
+  const sidebarContent = (
+    <>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "0 8px",
+          marginBottom: "24px",
+        }}
+      >
+        <div
+          style={{
+            width: "32px",
+            height: "32px",
+            background: "#059669",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 0 10px rgba(5,150,105,0.5)",
+            flexShrink: 0,
+          }}
+        >
+          <span style={{ color: "white", fontWeight: 700, fontSize: "14px" }}>
+            A
+          </span>
+        </div>
+        <span
+          style={{
+            fontSize: "15px",
+            fontWeight: 600,
+            color: "var(--text-primary)",
+          }}
+        >
+          Admin Panel
+        </span>
+      </div>
+
+      <button
+        onClick={toggleTheme}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          padding: "10px 12px",
+          marginBottom: "16px",
+          borderRadius: "10px",
+          fontSize: "13.5px",
+          fontWeight: 500,
+          color: "var(--text-secondary)",
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          cursor: "pointer",
+        }}
+      >
+        {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+        {theme === "dark" ? "Light Mode" : "Dark Mode"}
+      </button>
+
+      <nav
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "4px",
+          flex: 1,
+        }}
+      >
+        {navItems.map((item) => {
+          const active = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                padding: "10px 12px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                fontWeight: 500,
+                color: active ? "#34D399" : "var(--text-secondary)",
+                background: active ? "rgba(5,150,105,0.1)" : "transparent",
+                textDecoration: "none",
+                transition: "all 0.15s ease",
+              }}
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          );
+        })}
+      </nav>
+
+      <button
+        onClick={handleLogout}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          padding: "10px 12px",
+          borderRadius: "10px",
+          fontSize: "14px",
+          fontWeight: 500,
+          color: "var(--text-secondary)",
+          background: "transparent",
+          border: "1px solid var(--card-border)",
+          cursor: "pointer",
+        }}
+      >
+        <LogOutIcon />
+        Logout
+      </button>
+    </>
+  );
+
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
+      {/* Desktop sidebar */}
       <aside
+        className="admin-sidebar-desktop"
         style={{
           width: "240px",
           flexShrink: 0,
@@ -144,122 +292,149 @@ export default function AdminLayout({
           height: "100vh",
         }}
       >
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile drawer overlay */}
+      {mobileOpen && (
         <div
+          onClick={() => setMobileOpen(false)}
           style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            zIndex: 50,
+          }}
+        />
+      )}
+
+      {/* Mobile drawer panel */}
+      <aside
+        style={{
+          position: "fixed",
+          top: 0,
+          left: mobileOpen ? 0 : "-280px",
+          width: "260px",
+          height: "100vh",
+          background: "var(--footer-bg)",
+          borderRight: "1px solid var(--card-border)",
+          padding: "20px 16px",
+          display: "flex",
+          flexDirection: "column",
+          zIndex: 51,
+          transition: "left 0.25s ease",
+        }}
+      >
+        <button
+          onClick={() => setMobileOpen(false)}
+          aria-label="Close menu"
+          style={{
+            alignSelf: "flex-end",
+            width: "32px",
+            height: "32px",
             display: "flex",
             alignItems: "center",
-            gap: "10px",
-            padding: "0 8px",
-            marginBottom: "24px",
+            justifyContent: "center",
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
+            borderRadius: "8px",
+            color: "var(--text-secondary)",
+            cursor: "pointer",
+            marginBottom: "12px",
           }}
         >
-          <div
+          <XIcon />
+        </button>
+        {sidebarContent}
+      </aside>
+
+      {/* Right side: topbar (mobile only) + main content, stacked in a column */}
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+        }}
+      >
+        <div
+          className="admin-topbar-mobile"
+          style={{
+            display: "none",
+            position: "sticky",
+            top: 0,
+            zIndex: 40,
+            background: "var(--footer-bg)",
+            borderBottom: "1px solid var(--card-border)",
+            padding: "14px 16px",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
+              style={{
+                width: "28px",
+                height: "28px",
+                background: "#059669",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <span
+                style={{ color: "white", fontWeight: 700, fontSize: "12px" }}
+              >
+                A
+              </span>
+            </div>
+            <span
+              style={{
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "var(--text-primary)",
+              }}
+            >
+              Admin Panel
+            </span>
+          </div>
+          <button
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open menu"
             style={{
-              width: "32px",
-              height: "32px",
-              background: "#059669",
-              borderRadius: "50%",
+              width: "36px",
+              height: "36px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 0 10px rgba(5,150,105,0.5)",
+              background: "var(--card-bg)",
+              border: "1px solid var(--card-border)",
+              borderRadius: "8px",
+              color: "var(--text-secondary)",
+              cursor: "pointer",
             }}
           >
-            <span style={{ color: "white", fontWeight: 700, fontSize: "14px" }}>
-              A
-            </span>
-          </div>
-          <span
-            style={{
-              fontSize: "15px",
-              fontWeight: 600,
-              color: "var(--text-primary)",
-            }}
-          >
-            Admin Panel
-          </span>
+            <MenuIcon />
+          </button>
         </div>
 
-        <button
-          onClick={toggleTheme}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "10px 12px",
-            marginBottom: "16px",
-            borderRadius: "10px",
-            fontSize: "13.5px",
-            fontWeight: 500,
-            color: "var(--text-secondary)",
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
-            cursor: "pointer",
-          }}
+        <main
+          className="admin-main-content"
+          style={{ flex: 1, padding: "32px 40px", overflowY: "auto" }}
         >
-          {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-          {theme === "dark" ? "Light Mode" : "Dark Mode"}
-        </button>
+          {children}
+        </main>
+      </div>
 
-        <nav
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "4px",
-            flex: 1,
-          }}
-        >
-          {navItems.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  padding: "10px 12px",
-                  borderRadius: "10px",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  color: active ? "#34D399" : "var(--text-secondary)",
-                  background: active ? "rgba(5,150,105,0.1)" : "transparent",
-                  textDecoration: "none",
-                  transition: "all 0.15s ease",
-                }}
-              >
-                {item.icon}
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <button
-          onClick={handleLogout}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            padding: "10px 12px",
-            borderRadius: "10px",
-            fontSize: "14px",
-            fontWeight: 500,
-            color: "var(--text-secondary)",
-            background: "transparent",
-            border: "1px solid var(--card-border)",
-            cursor: "pointer",
-          }}
-        >
-          <LogOutIcon />
-          Logout
-        </button>
-      </aside>
-
-      <main style={{ flex: 1, padding: "32px 40px", overflowY: "auto" }}>
-        {children}
-      </main>
+      <style>{`
+        @media (max-width: 900px) {
+          .admin-sidebar-desktop { display: none !important; }
+          .admin-topbar-mobile { display: flex !important; }
+          .admin-main-content { padding: 20px 16px !important; }
+        }
+      `}</style>
     </div>
   );
 }

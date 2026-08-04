@@ -147,7 +147,7 @@ export default function AdminProjectsPage() {
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "10px 12px",
-    fontSize: "14px",
+    fontSize: "16px",
     color: "var(--text-primary)",
     background: "var(--input-bg)",
     border: "1px solid var(--input-border)",
@@ -170,12 +170,14 @@ export default function AdminProjectsPage() {
           alignItems: "center",
           justifyContent: "space-between",
           marginBottom: "24px",
+          gap: "12px",
+          flexWrap: "wrap",
         }}
       >
         <div>
           <h1
             style={{
-              fontSize: "24px",
+              fontSize: "22px",
               fontWeight: 700,
               color: "var(--text-primary)",
               margin: "0 0 6px",
@@ -185,7 +187,7 @@ export default function AdminProjectsPage() {
           </h1>
           <p
             style={{
-              fontSize: "14px",
+              fontSize: "13.5px",
               color: "var(--text-secondary)",
               margin: 0,
             }}
@@ -208,6 +210,7 @@ export default function AdminProjectsPage() {
             borderRadius: "9999px",
             cursor: "pointer",
             boxShadow: "0 0 14px rgba(5,150,105,0.35)",
+            whiteSpace: "nowrap",
           }}
         >
           <PlusIcon /> Add Project
@@ -221,7 +224,7 @@ export default function AdminProjectsPage() {
             background: "var(--card-bg)",
             border: "1px solid rgba(5,150,105,0.3)",
             borderRadius: "16px",
-            padding: "24px",
+            padding: "20px",
             marginBottom: "24px",
             display: "flex",
             flexDirection: "column",
@@ -274,13 +277,7 @@ export default function AdminProjectsPage() {
             />
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "14px",
-            }}
-          >
+          <div className="admin-form-grid-2">
             <div>
               <label style={labelStyle}>GitHub URL</label>
               <input
@@ -303,7 +300,8 @@ export default function AdminProjectsPage() {
 
           <div>
             <label style={labelStyle}>
-              Role (optional — e.g. "Founder & Developer" or "Client Project")
+              Role (optional — e.g. &quot;Founder &amp; Developer&quot; or
+              &quot;Client Project&quot;)
             </label>
             <input
               value={form.role}
@@ -331,7 +329,14 @@ export default function AdminProjectsPage() {
             Mark as featured
           </label>
 
-          <div style={{ display: "flex", gap: "10px", marginTop: "6px" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              marginTop: "6px",
+              flexWrap: "wrap",
+            }}
+          >
             <button
               type="submit"
               disabled={saving}
@@ -382,31 +387,33 @@ export default function AdminProjectsPage() {
           {projects.map((project) => (
             <div
               key={project.id}
+              className="admin-project-card"
               style={{
                 background: "var(--card-bg)",
                 border: project.featured
                   ? "1px solid rgba(5,150,105,0.3)"
                   : "1px solid var(--card-border)",
                 borderRadius: "14px",
-                padding: "18px 22px",
+                padding: "16px 18px",
                 display: "flex",
                 alignItems: "flex-start",
                 justifyContent: "space-between",
                 gap: "16px",
               }}
             >
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
                     gap: "10px",
                     marginBottom: "6px",
+                    flexWrap: "wrap",
                   }}
                 >
                   <h3
                     style={{
-                      fontSize: "15px",
+                      fontSize: "14.5px",
                       fontWeight: 600,
                       color: "var(--text-primary)",
                       margin: 0,
@@ -478,8 +485,8 @@ export default function AdminProjectsPage() {
                 <button
                   onClick={() => openEditForm(project)}
                   style={{
-                    width: "34px",
-                    height: "34px",
+                    width: "32px",
+                    height: "32px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -495,8 +502,8 @@ export default function AdminProjectsPage() {
                 <button
                   onClick={() => handleDelete(project.id)}
                   style={{
-                    width: "34px",
-                    height: "34px",
+                    width: "32px",
+                    height: "32px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -514,6 +521,25 @@ export default function AdminProjectsPage() {
           ))}
         </div>
       )}
+
+      <style>{`
+        .admin-form-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+        }
+        @media (max-width: 560px) {
+          .admin-form-grid-2 {
+            grid-template-columns: 1fr;
+          }
+          .admin-project-card {
+            flex-direction: column;
+          }
+          .admin-project-card > div:last-child {
+            align-self: flex-end;
+          }
+        }
+      `}</style>
     </div>
   );
 }

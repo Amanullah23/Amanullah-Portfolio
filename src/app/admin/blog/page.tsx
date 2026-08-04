@@ -132,7 +132,7 @@ export default function AdminBlogPage() {
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "10px 12px",
-    fontSize: "14px",
+    fontSize: "16px",
     color: "var(--text-primary)",
     background: "var(--input-bg)",
     border: "1px solid var(--input-border)",
@@ -155,12 +155,14 @@ export default function AdminBlogPage() {
           alignItems: "center",
           justifyContent: "space-between",
           marginBottom: "24px",
+          gap: "12px",
+          flexWrap: "wrap",
         }}
       >
         <div>
           <h1
             style={{
-              fontSize: "24px",
+              fontSize: "22px",
               fontWeight: 700,
               color: "var(--text-primary)",
               margin: "0 0 6px",
@@ -170,7 +172,7 @@ export default function AdminBlogPage() {
           </h1>
           <p
             style={{
-              fontSize: "14px",
+              fontSize: "13.5px",
               color: "var(--text-secondary)",
               margin: 0,
             }}
@@ -193,6 +195,7 @@ export default function AdminBlogPage() {
             borderRadius: "9999px",
             cursor: "pointer",
             boxShadow: "0 0 14px rgba(5,150,105,0.35)",
+            whiteSpace: "nowrap",
           }}
         >
           <PlusIcon /> New Post
@@ -206,7 +209,7 @@ export default function AdminBlogPage() {
             background: "var(--card-bg)",
             border: "1px solid rgba(5,150,105,0.3)",
             borderRadius: "16px",
-            padding: "24px",
+            padding: "20px",
             marginBottom: "24px",
             display: "flex",
             flexDirection: "column",
@@ -224,13 +227,7 @@ export default function AdminBlogPage() {
             {editingId ? "Edit Post" : "New Post"}
           </h3>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "14px",
-            }}
-          >
+          <div className="admin-form-grid-2">
             <div>
               <label style={labelStyle}>Category</label>
               <input
@@ -294,7 +291,14 @@ export default function AdminBlogPage() {
             />
           </div>
 
-          <div style={{ display: "flex", gap: "10px", marginTop: "6px" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              marginTop: "6px",
+              flexWrap: "wrap",
+            }}
+          >
             <button
               type="submit"
               disabled={saving}
@@ -344,24 +348,26 @@ export default function AdminBlogPage() {
           {posts.map((post) => (
             <div
               key={post.id}
+              className="admin-post-card"
               style={{
                 background: "var(--card-bg)",
                 border: "1px solid var(--card-border)",
                 borderRadius: "14px",
-                padding: "18px 22px",
+                padding: "16px 18px",
                 display: "flex",
                 alignItems: "flex-start",
                 justifyContent: "space-between",
                 gap: "16px",
               }}
             >
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
                     gap: "10px",
                     marginBottom: "6px",
+                    flexWrap: "wrap",
                   }}
                 >
                   <span
@@ -386,7 +392,7 @@ export default function AdminBlogPage() {
                 </div>
                 <h3
                   style={{
-                    fontSize: "15px",
+                    fontSize: "14.5px",
                     fontWeight: 600,
                     color: "var(--text-primary)",
                     margin: "0 0 4px",
@@ -410,8 +416,8 @@ export default function AdminBlogPage() {
                 <button
                   onClick={() => openEditForm(post)}
                   style={{
-                    width: "34px",
-                    height: "34px",
+                    width: "32px",
+                    height: "32px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -427,8 +433,8 @@ export default function AdminBlogPage() {
                 <button
                   onClick={() => handleDelete(post.id)}
                   style={{
-                    width: "34px",
-                    height: "34px",
+                    width: "32px",
+                    height: "32px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -446,6 +452,25 @@ export default function AdminBlogPage() {
           ))}
         </div>
       )}
+
+      <style>{`
+        .admin-form-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+        }
+        @media (max-width: 560px) {
+          .admin-form-grid-2 {
+            grid-template-columns: 1fr;
+          }
+          .admin-post-card {
+            flex-direction: column;
+          }
+          .admin-post-card > div:last-child {
+            align-self: flex-end;
+          }
+        }
+      `}</style>
     </div>
   );
 }

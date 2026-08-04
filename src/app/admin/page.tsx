@@ -1,7 +1,7 @@
 const stats = [
-  { label: "Total Projects", value: "8" },
-  { label: "Blog Posts", value: "5" },
-  { label: "Experience Entries", value: "6" },
+  { label: "Total Projects", value: "5" },
+  { label: "Blog Posts", value: "3" },
+  { label: "Experience Entries", value: "7" },
   { label: "Site Status", value: "Live" },
 ];
 
@@ -10,7 +10,7 @@ export default function AdminOverview() {
     <div>
       <h1
         style={{
-          fontSize: "24px",
+          fontSize: "22px",
           fontWeight: 700,
           color: "var(--text-primary)",
           margin: "0 0 6px",
@@ -20,9 +20,9 @@ export default function AdminOverview() {
       </h1>
       <p
         style={{
-          fontSize: "14px",
+          fontSize: "13.5px",
           color: "var(--text-secondary)",
-          margin: "0 0 32px",
+          margin: "0 0 28px",
         }}
       >
         Manage your portfolio content from here.
@@ -31,8 +31,8 @@ export default function AdminOverview() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "16px",
+          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+          gap: "12px",
         }}
       >
         {stats.map((s) => (
@@ -42,21 +42,21 @@ export default function AdminOverview() {
               background: "var(--card-bg)",
               border: "1px solid var(--card-border)",
               borderRadius: "14px",
-              padding: "20px",
+              padding: "16px 18px",
             }}
           >
             <p
               style={{
-                fontSize: "12px",
+                fontSize: "11.5px",
                 color: "var(--text-secondary)",
-                margin: "0 0 8px",
+                margin: "0 0 6px",
               }}
             >
               {s.label}
             </p>
             <p
               style={{
-                fontSize: "26px",
+                fontSize: "22px",
                 fontWeight: 700,
                 color: "var(--text-primary)",
                 margin: 0,
