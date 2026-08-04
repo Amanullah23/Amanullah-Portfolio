@@ -27,7 +27,7 @@ const AwardIcon = () => (
 
 const awards = [
   {
-    title: "First Position — Kankor Exam",
+    title: "First Position — High School Graduation",
     org: "Shahid Balkhi High School, Ghazni",
     detail: "Top score of 310, first position across all classes",
   },
