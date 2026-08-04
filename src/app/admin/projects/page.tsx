@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import {
   AdminProject,
   getProjectsClient,
@@ -134,13 +135,22 @@ export default function AdminProjectsPage() {
     }
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm("Delete this project?")) return;
+  const [deleteTarget, setDeleteTarget] = useState<AdminProject | null>(null);
+  const [deleteError, setDeleteError] = useState("");
+
+  function requestDelete(project: AdminProject) {
+    setDeleteTarget(project);
+    setDeleteError("");
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
     try {
-      await deleteProject(id);
+      await deleteProject(deleteTarget.id);
+      setDeleteTarget(null);
       await loadProjects();
     } catch (err) {
-      alert("Failed to delete: " + (err as Error).message);
+      setDeleteError((err as Error).message);
     }
   }
 
@@ -500,7 +510,7 @@ export default function AdminProjectsPage() {
                   <EditIcon />
                 </button>
                 <button
-                  onClick={() => handleDelete(project.id)}
+                  onClick={() => requestDelete(project)}
                   style={{
                     width: "32px",
                     height: "32px",
@@ -540,6 +550,17 @@ export default function AdminProjectsPage() {
           }
         }
       `}</style>
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete this project?"
+        message={
+          deleteTarget
+            ? `"${deleteTarget.title}" will be permanently removed.${deleteError ? ` Error: ${deleteError}` : ""}`
+            : ""
+        }
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

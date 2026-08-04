@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import {
   BlogPost,
   getBlogPostsClient,
@@ -119,13 +120,22 @@ export default function AdminBlogPage() {
     }
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm("Delete this post?")) return;
+  const [deleteTarget, setDeleteTarget] = useState<BlogPost | null>(null);
+  const [deleteError, setDeleteError] = useState("");
+
+  function requestDelete(post: BlogPost) {
+    setDeleteTarget(post);
+    setDeleteError("");
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
     try {
-      await deleteBlogPost(id);
+      await deleteBlogPost(deleteTarget.id);
+      setDeleteTarget(null);
       await loadPosts();
     } catch (err) {
-      alert("Failed to delete: " + (err as Error).message);
+      setDeleteError((err as Error).message);
     }
   }
 
@@ -431,7 +441,7 @@ export default function AdminBlogPage() {
                   <EditIcon />
                 </button>
                 <button
-                  onClick={() => handleDelete(post.id)}
+                  onClick={() => requestDelete(post)}
                   style={{
                     width: "32px",
                     height: "32px",
@@ -471,6 +481,17 @@ export default function AdminBlogPage() {
           }
         }
       `}</style>
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete this post?"
+        message={
+          deleteTarget
+            ? `"${deleteTarget.title}" will be permanently removed.${deleteError ? ` Error: ${deleteError}` : ""}`
+            : ""
+        }
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

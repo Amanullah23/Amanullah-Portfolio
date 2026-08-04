@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import ConfirmDialog from "@/components/admin/ConfirmDialog";
 import {
   ExperienceEntry,
   getExperienceClient,
@@ -119,13 +120,24 @@ export default function AdminExperiencePage() {
     }
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm("Delete this entry?")) return;
+  const [deleteTarget, setDeleteTarget] = useState<ExperienceEntry | null>(
+    null,
+  );
+  const [deleteError, setDeleteError] = useState("");
+
+  function requestDelete(entry: ExperienceEntry) {
+    setDeleteTarget(entry);
+    setDeleteError("");
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
     try {
-      await deleteExperience(id);
+      await deleteExperience(deleteTarget.id);
+      setDeleteTarget(null);
       await loadEntries();
     } catch (err) {
-      alert("Failed to delete: " + (err as Error).message);
+      setDeleteError((err as Error).message);
     }
   }
 
@@ -440,7 +452,7 @@ export default function AdminExperiencePage() {
                   <EditIcon />
                 </button>
                 <button
-                  onClick={() => handleDelete(entry.id)}
+                  onClick={() => requestDelete(entry)}
                   style={{
                     width: "32px",
                     height: "32px",
@@ -481,6 +493,17 @@ export default function AdminExperiencePage() {
           }
         }
       `}</style>
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Delete this entry?"
+        message={
+          deleteTarget
+            ? `"${deleteTarget.title}" at ${deleteTarget.company} will be permanently removed.${deleteError ? ` Error: ${deleteError}` : ""}`
+            : ""
+        }
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }
