@@ -54,6 +54,7 @@ const moreLinks = [
   { label: "Blog", href: "/blog" },
   { label: "Resume", href: "/resume.pdf" },
   { label: "GitHub", href: "https://github.com/Amanullah23" },
+  { label: "FAQ", href: "/faq" },
 ];
 
 export default function Footer() {

@@ -14,6 +14,7 @@ const navLinks = [
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
   { label: "Blog", href: "/blog" },
+  { label: "FAQ", href: "/faq" },
 ];
 
 const GitHubIcon = ({ size = 16 }: { size?: number }) => (
@@ -84,7 +85,7 @@ export default function Header() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         style={{
           width: "100%",
-          maxWidth: "820px",
+          maxWidth: "1000px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
