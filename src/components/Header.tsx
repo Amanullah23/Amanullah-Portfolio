@@ -13,7 +13,14 @@ const navLinks = [
   { label: "Experience", href: "#experience" },
   { label: "Projects", href: "#projects" },
   { label: "Skills", href: "#skills" },
-  { label: "Blog", href: "/blog" },
+  {
+    label: "Blog",
+    href: "/blog",
+    children: [
+      { label: "Blog", href: "/blog" },
+      { label: "Case Studies", href: "/case-studies" },
+    ],
+  },
   { label: "FAQ", href: "/faq" },
 ];
 
@@ -54,6 +61,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [blogDropdownOpen, setBlogDropdownOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
   const { theme, toggleTheme } = useTheme();
@@ -147,6 +155,76 @@ export default function Header() {
           className="hidden-mobile"
         >
           {navLinks.map((link) => {
+            if (link.children) {
+              return (
+                <div
+                  key={link.label}
+                  style={{ position: "relative" }}
+                  onMouseEnter={() => setBlogDropdownOpen(true)}
+                  onMouseLeave={() => setBlogDropdownOpen(false)}
+                >
+                  <Link
+                    href={link.href}
+                    style={{
+                      padding: "7px 14px",
+                      fontSize: "13.5px",
+                      color:
+                        hoveredLink === link.label || blogDropdownOpen
+                          ? "var(--text-primary)"
+                          : "var(--text-secondary)",
+                      background:
+                        hoveredLink === link.label || blogDropdownOpen
+                          ? "var(--card-bg)"
+                          : "transparent",
+                      borderRadius: "9999px",
+                      textDecoration: "none",
+                      transition: "all 0.18s ease",
+                      whiteSpace: "nowrap",
+                      display: "inline-block",
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+
+                  {blogDropdownOpen && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "calc(100% + 8px)",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        background: "var(--bg)",
+                        border: "1px solid var(--card-border)",
+                        borderRadius: "12px",
+                        padding: "6px",
+                        minWidth: "160px",
+                        boxShadow: "0 12px 32px rgba(0,0,0,0.2)",
+                        zIndex: 60,
+                      }}
+                    >
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.label}
+                          href={child.href}
+                          style={{
+                            display: "block",
+                            padding: "9px 12px",
+                            fontSize: "13.5px",
+                            color: "var(--text-secondary)",
+                            textDecoration: "none",
+                            borderRadius: "8px",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
             const isHash = link.href.startsWith("#");
             return (
               <Link
@@ -308,36 +386,58 @@ export default function Header() {
               boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
             }}
           >
-            {navLinks.map((link) => {
-              const isHash = link.href.startsWith("#");
-              return (
-                <Link
-                  key={link.label}
-                  href={isHash ? (isHome ? link.href : "/") : link.href}
-                  onClick={(e) => {
-                    setMobileOpen(false);
-                    if (!isHash) return;
-                    if (isHome) {
-                      scrollToSection(e, link.href.slice(1));
-                    } else {
-                      setScrollTarget(link.href.slice(1));
-                    }
-                  }}
-                  style={{
-                    display: "block",
-                    padding: "16px 24px",
-                    fontSize: "15px",
-                    color: "var(--text-secondary)",
-                    textDecoration: "none",
-                    textAlign: "center",
-                    borderBottom: "1px solid var(--card-border)",
-                    transition: "all 0.15s ease",
-                  }}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
+            {navLinks.flatMap((link) =>
+              link.children
+                ? link.children.map((child) => (
+                    <Link
+                      key={child.label}
+                      href={child.href}
+                      onClick={() => setMobileOpen(false)}
+                      style={{
+                        display: "block",
+                        padding: "16px 24px",
+                        fontSize: "15px",
+                        color: "var(--text-secondary)",
+                        textDecoration: "none",
+                        textAlign: "center",
+                        borderBottom: "1px solid var(--card-border)",
+                      }}
+                    >
+                      {child.label}
+                    </Link>
+                  ))
+                : [
+                    (() => {
+                      const isHash = link.href.startsWith("#");
+                      return (
+                        <Link
+                          key={link.label}
+                          href={isHash ? (isHome ? link.href : "/") : link.href}
+                          onClick={(e) => {
+                            setMobileOpen(false);
+                            if (!isHash) return;
+                            if (isHome) {
+                              scrollToSection(e, link.href.slice(1));
+                            } else {
+                              setScrollTarget(link.href.slice(1));
+                            }
+                          }}
+                          style={{
+                            display: "block",
+                            padding: "16px 24px",
+                            fontSize: "15px",
+                            color: "var(--text-secondary)",
+                            textDecoration: "none",
+                            textAlign: "center",
+                            borderBottom: "1px solid var(--card-border)",
+                          }}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })(),
+                  ],
+            )}
             <div style={{ padding: "12px 16px" }}>
               <Link
                 href={isHome ? "#contact" : "/"}
