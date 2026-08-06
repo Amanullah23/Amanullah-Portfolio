@@ -9,6 +9,9 @@ const LIVE_LINKS: Record<string, string> = {
   "karjo-afghan-job-aggregator": "https://karjo.vercel.app",
   "karobar-home-services-marketplace": "https://getkarobar.vercel.app",
 };
+const AI_PAGE_LINK: Record<string, string> = {
+  "karjo-afghan-job-aggregator": "/ai",
+};
 
 const ExternalLinkIcon = () => (
   <svg
@@ -188,6 +191,20 @@ export default async function CaseStudyPage({
           <Block label="Solution" content={cs.solution} />
           <Block label="Technology" content={cs.technology} />
           <Block label="Result" content={cs.result} />
+          {AI_PAGE_LINK[cs.slug] && (
+            <p style={{ fontSize: "14px", margin: "0 0 24px" }}>
+              <Link
+                href={AI_PAGE_LINK[cs.slug]}
+                style={{
+                  color: "#34D399",
+                  textDecoration: "none",
+                  fontWeight: 500,
+                }}
+              >
+                See how I plan to add AI-powered matching to this project →
+              </Link>
+            </p>
+          )}
           {LIVE_LINKS[cs.slug] && (
             <div
               style={{

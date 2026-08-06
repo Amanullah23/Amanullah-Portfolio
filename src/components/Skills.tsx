@@ -62,6 +62,15 @@ const categories: SkillCategory[] = [
       { name: "System Administration", level: 80 },
     ],
   },
+  {
+    title: "AI & Automation",
+    skills: [
+      { name: "LLM Integration (Claude, GPT)", level: 85 },
+      { name: "Prompt Engineering", level: 85 },
+      { name: "AI Chatbots & Agents", level: 80 },
+      { name: "Workflow Automation", level: 75 },
+    ],
+  },
 ];
 
 export default function Skills() {

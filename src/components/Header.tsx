@@ -22,6 +22,7 @@ const navLinks = [
     ],
   },
   { label: "FAQ", href: "/faq" },
+  { label: "AI", href: "/ai" },
 ];
 
 const GitHubIcon = ({ size = 16 }: { size?: number }) => (
