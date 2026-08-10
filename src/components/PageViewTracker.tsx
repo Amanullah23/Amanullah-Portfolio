@@ -3,12 +3,23 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
+function getVisitorId(): string {
+  const key = "portfolio_visitor_id";
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
 export default function PageViewTracker() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Skip tracking admin pages — you don't need analytics on your own dashboard visits
     if (pathname.startsWith("/admin")) return;
+
+    const visitorId = getVisitorId();
 
     fetch("/api/track", {
       method: "POST",
@@ -16,10 +27,9 @@ export default function PageViewTracker() {
       body: JSON.stringify({
         path: pathname,
         referrer: document.referrer || "",
+        visitorId,
       }),
-    }).catch(() => {
-      // Fail silently — tracking should never break the site
-    });
+    }).catch(() => {});
   }, [pathname]);
 
   return null;

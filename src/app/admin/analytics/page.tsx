@@ -5,6 +5,15 @@ import {
   getAnalyticsSummary,
   AnalyticsSummary,
 } from "@/lib/supabase/analytics-client";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
@@ -146,6 +155,14 @@ export default function AdminAnalyticsPage() {
     );
   }
 
+  const chartData = data.dailyTrend.map((d) => ({
+    ...d,
+    label: new Date(d.date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    }),
+  }));
+
   return (
     <div>
       <h1
@@ -173,12 +190,74 @@ export default function AdminAnalyticsPage() {
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
           gap: "12px",
-          marginBottom: "28px",
+          marginBottom: "20px",
         }}
       >
-        <StatCard label="Total Views (recent)" value={data.total} />
+        <StatCard label="Total Views" value={data.total} />
+        <StatCard label="Unique Visitors" value={data.uniqueVisitors} />
         <StatCard label="Last 7 Days" value={data.last7Days} />
         <StatCard label="Last 30 Days" value={data.last30Days} />
+      </div>
+
+      {/* Trend chart */}
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "16px",
+          padding: "20px",
+          marginBottom: "20px",
+        }}
+      >
+        <h3
+          style={{
+            fontSize: "14px",
+            fontWeight: 600,
+            color: "var(--text-primary)",
+            margin: "0 0 16px",
+          }}
+        >
+          Views — Last 14 Days
+        </h3>
+        <div style={{ width: "100%", height: "220px" }}>
+          <ResponsiveContainer>
+            <LineChart data={chartData}>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="var(--card-border)"
+              />
+              <XAxis
+                dataKey="label"
+                tick={{ fontSize: 11, fill: "var(--text-secondary)" }}
+                axisLine={{ stroke: "var(--card-border)" }}
+                tickLine={false}
+              />
+              <YAxis
+                allowDecimals={false}
+                tick={{ fontSize: 11, fill: "var(--text-secondary)" }}
+                axisLine={{ stroke: "var(--card-border)" }}
+                tickLine={false}
+                width={30}
+              />
+              <Tooltip
+                contentStyle={{
+                  background: "var(--bg)",
+                  border: "1px solid var(--card-border)",
+                  borderRadius: "10px",
+                  fontSize: "12.5px",
+                  color: "var(--text-primary)",
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="views"
+                stroke="#059669"
+                strokeWidth={2.5}
+                dot={{ r: 3, fill: "#34D399" }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       <div

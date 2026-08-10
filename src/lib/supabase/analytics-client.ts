@@ -6,44 +6,51 @@ export type PageView = {
   referrer: string | null;
   country: string | null;
   device_type: string | null;
+  visitor_id: string | null;
   created_at: string;
 };
 
+export type DailyCount = { date: string; views: number };
+
 export type AnalyticsSummary = {
   total: number;
+  uniqueVisitors: number;
   last7Days: number;
   last30Days: number;
   topPages: { path: string; count: number }[];
   topReferrers: { referrer: string; count: number }[];
   topCountries: { country: string; count: number }[];
   deviceBreakdown: { device: string; count: number }[];
+  dailyTrend: DailyCount[];
   recent: PageView[];
 };
 
 export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   const supabase = createClient();
 
-  // Fetch the most recent 2000 views — enough for meaningful stats on a portfolio site
-  // without unbounded growth; revisit with a proper SQL aggregate view if traffic scales up.
-  const { data, error } = await supabase
+  const { data: rawData, error } = await supabase
     .from("page_views")
     .select("*")
     .order("created_at", { ascending: false })
     .limit(2000);
 
-  if (error || !data) {
+  if (error || !rawData) {
     console.error("Error fetching analytics:", error);
     return {
       total: 0,
+      uniqueVisitors: 0,
       last7Days: 0,
       last30Days: 0,
       topPages: [],
       topReferrers: [],
       topCountries: [],
       deviceBreakdown: [],
+      dailyTrend: [],
       recent: [],
     };
   }
+
+  const data: PageView[] = rawData;
 
   const now = Date.now();
   const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
@@ -56,12 +63,15 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     (v) => new Date(v.created_at).getTime() >= thirtyDaysAgo,
   ).length;
 
+  const uniqueVisitors = new Set(data.map((v) => v.visitor_id).filter(Boolean))
+    .size;
+
   function tally(
     field: keyof PageView,
     fallback: string,
   ): { key: string; count: number }[] {
     const counts: Record<string, number> = {};
-    for (const view of data ?? []) {
+    for (const view of data) {
       const value = (view[field] as string) || fallback;
       counts[value] = (counts[value] || 0) + 1;
     }
@@ -84,14 +94,31 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     count: x.count,
   }));
 
+  // Daily trend — last 14 days, oldest to newest
+  const dayBuckets: Record<string, number> = {};
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(now - i * 24 * 60 * 60 * 1000);
+    const key = d.toISOString().slice(0, 10);
+    dayBuckets[key] = 0;
+  }
+  for (const view of data) {
+    const key = view.created_at.slice(0, 10);
+    if (key in dayBuckets) dayBuckets[key] += 1;
+  }
+  const dailyTrend: DailyCount[] = Object.entries(dayBuckets).map(
+    ([date, views]) => ({ date, views }),
+  );
+
   return {
     total: data.length,
+    uniqueVisitors,
     last7Days,
     last30Days,
     topPages,
     topReferrers,
     topCountries,
     deviceBreakdown,
+    dailyTrend,
     recent: data.slice(0, 20),
   };
 }

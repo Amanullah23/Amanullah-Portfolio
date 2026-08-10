@@ -10,7 +10,7 @@ function getDeviceType(userAgent: string): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const { path, referrer } = await req.json();
+    const { path, referrer, visitorId } = await req.json();
 
     if (!path || typeof path !== "string") {
       return NextResponse.json({ error: "Invalid input" }, { status: 400 });
@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
       referrer: referrer || "direct",
       country,
       device_type,
+      visitor_id: visitorId || null,
     });
 
     return NextResponse.json({ ok: true });
