@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import {
   getAnalyticsSummary,
   AnalyticsSummary,
+  getEventSummary,
+  EventSummary,
 } from "@/lib/supabase/analytics-client";
 import {
   LineChart,
@@ -139,12 +141,16 @@ function BreakdownList({
 export default function AdminAnalyticsPage() {
   const [data, setData] = useState<AnalyticsSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [events, setEvents] = useState<EventSummary[]>([]);
 
   useEffect(() => {
-    getAnalyticsSummary().then((summary) => {
-      setData(summary);
-      setLoading(false);
-    });
+    Promise.all([getAnalyticsSummary(), getEventSummary()]).then(
+      ([summary, eventData]) => {
+        setData(summary);
+        setEvents(eventData);
+        setLoading(false);
+      },
+    );
   }, []);
 
   if (loading || !data) {
@@ -190,13 +196,25 @@ export default function AdminAnalyticsPage() {
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
           gap: "12px",
-          marginBottom: "20px",
+          marginBottom: "12px",
         }}
       >
         <StatCard label="Total Views" value={data.total} />
         <StatCard label="Unique Visitors" value={data.uniqueVisitors} />
         <StatCard label="Last 7 Days" value={data.last7Days} />
         <StatCard label="Last 30 Days" value={data.last30Days} />
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+          gap: "12px",
+          marginBottom: "20px",
+        }}
+      >
+        <StatCard label="New Visitors" value={data.newVisitors} />
+        <StatCard label="Returning Visitors" value={data.returningVisitors} />
       </div>
 
       {/* Trend chart */}
@@ -290,6 +308,16 @@ export default function AdminAnalyticsPage() {
           items={data.deviceBreakdown.map((d) => ({
             label: d.device,
             count: d.count,
+          }))}
+        />
+      </div>
+
+      <div style={{ marginTop: "16px" }}>
+        <BreakdownList
+          title="Key Actions"
+          items={events.map((e) => ({
+            label: e.event.replace(/_/g, " "),
+            count: e.count,
           }))}
         />
       </div>

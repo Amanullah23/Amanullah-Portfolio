@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { scrollToSection, setScrollTarget } from "@/lib/scroll";
 import { useTheme } from "@/lib/theme-context";
+import { trackEvent } from "@/lib/track";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -318,10 +319,13 @@ export default function Header() {
           <Link
             href={isHome ? "#contact" : "/"}
             onClick={(e) => {
+              trackEvent("hire_me_click");
               if (isHome) {
                 scrollToSection(e, "contact");
               } else {
+                e.preventDefault();
                 setScrollTarget("contact");
+                window.location.href = "/";
               }
             }}
             style={{
@@ -443,11 +447,13 @@ export default function Header() {
               <Link
                 href={isHome ? "#contact" : "/"}
                 onClick={(e) => {
-                  setMobileOpen(false);
+                  trackEvent("hire_me_click");
                   if (isHome) {
                     scrollToSection(e, "contact");
                   } else {
+                    e.preventDefault();
                     setScrollTarget("contact");
+                    window.location.href = "/";
                   }
                 }}
                 style={{

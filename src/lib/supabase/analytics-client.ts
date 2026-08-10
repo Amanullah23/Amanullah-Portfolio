@@ -15,6 +15,8 @@ export type DailyCount = { date: string; views: number };
 export type AnalyticsSummary = {
   total: number;
   uniqueVisitors: number;
+  newVisitors: number;
+  returningVisitors: number;
   last7Days: number;
   last30Days: number;
   topPages: { path: string; count: number }[];
@@ -39,6 +41,8 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     return {
       total: 0,
       uniqueVisitors: 0,
+      newVisitors: 0,
+      returningVisitors: 0,
       last7Days: 0,
       last30Days: 0,
       topPages: [],
@@ -65,6 +69,22 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
 
   const uniqueVisitors = new Set(data.map((v) => v.visitor_id).filter(Boolean))
     .size;
+
+  // New vs. returning: a visitor is "returning" if they showed up on more than one distinct calendar day
+  const visitorDayMap: Record<string, Set<string>> = {};
+  for (const view of data) {
+    if (!view.visitor_id) continue;
+    const day = view.created_at.slice(0, 10);
+    if (!visitorDayMap[view.visitor_id])
+      visitorDayMap[view.visitor_id] = new Set();
+    visitorDayMap[view.visitor_id].add(day);
+  }
+  let newVisitors = 0;
+  let returningVisitors = 0;
+  for (const days of Object.values(visitorDayMap)) {
+    if (days.size > 1) returningVisitors += 1;
+    else newVisitors += 1;
+  }
 
   function tally(
     field: keyof PageView,
@@ -112,6 +132,8 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
   return {
     total: data.length,
     uniqueVisitors,
+    newVisitors,
+    returningVisitors,
     last7Days,
     last30Days,
     topPages,
@@ -121,4 +143,28 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     dailyTrend,
     recent: data.slice(0, 20),
   };
+}
+
+export type EventSummary = { event: string; count: number };
+
+export async function getEventSummary(): Promise<EventSummary[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("site_events")
+    .select("event_name")
+    .limit(2000);
+
+  if (error || !data) {
+    console.error("Error fetching events:", error);
+    return [];
+  }
+
+  const counts: Record<string, number> = {};
+  for (const row of data) {
+    counts[row.event_name] = (counts[row.event_name] || 0) + 1;
+  }
+
+  return Object.entries(counts)
+    .map(([event, count]) => ({ event, count }))
+    .sort((a, b) => b.count - a.count);
 }

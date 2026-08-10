@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import type { AdminProject } from "@/lib/supabase/projects-client";
+import { trackEvent } from "@/lib/track";
 
 const fadeUp = (i: number) => ({
   hidden: { opacity: 0, y: 24 },
@@ -327,6 +328,7 @@ export default function ProjectsGrid({
                   <Link
                     href={p.live}
                     target="_blank"
+                    onClick={() => trackEvent("project_live_click")}
                     style={{
                       display: "flex",
                       alignItems: "center",

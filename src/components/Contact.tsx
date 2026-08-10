@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { socialLinks } from "@/lib/social-links";
+import { trackEvent } from "@/lib/track";
 
 const fadeUp = (i: number) => ({
   hidden: { opacity: 0, y: 24 },
@@ -225,6 +226,14 @@ export default function Contact() {
                   <Link
                     href={item.href}
                     target={item.href.startsWith("http") ? "_blank" : undefined}
+                    onClick={() => {
+                      if (item.label === "Email")
+                        trackEvent("contact_email_click");
+                      if (item.label === "Phone")
+                        trackEvent("contact_phone_click");
+                      if (item.label === "WhatsApp")
+                        trackEvent("contact_whatsapp_click");
+                    }}
                     style={{
                       textDecoration: "none",
                       display: "block",

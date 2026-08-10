@@ -2,16 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-
-function getVisitorId(): string {
-  const key = "portfolio_visitor_id";
-  let id = localStorage.getItem(key);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(key, id);
-  }
-  return id;
-}
+import { getVisitorId } from "@/lib/track";
 
 export default function PageViewTracker() {
   const pathname = usePathname();
@@ -19,15 +10,13 @@ export default function PageViewTracker() {
   useEffect(() => {
     if (pathname.startsWith("/admin")) return;
 
-    const visitorId = getVisitorId();
-
     fetch("/api/track", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         path: pathname,
         referrer: document.referrer || "",
-        visitorId,
+        visitorId: getVisitorId(),
       }),
     }).catch(() => {});
   }, [pathname]);

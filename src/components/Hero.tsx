@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { trackEvent } from "@/lib/track";
 
 const fadeUp = (i: number) => ({
   hidden: { opacity: 0, y: 24 },
@@ -230,6 +231,7 @@ export default function Hero() {
             <Link
               href="/resume.pdf"
               target="_blank"
+              onClick={() => trackEvent("download_resume")}
               style={{
                 display: "flex",
                 alignItems: "center",
