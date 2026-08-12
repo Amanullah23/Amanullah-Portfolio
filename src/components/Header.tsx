@@ -274,10 +274,11 @@ export default function Header() {
             paddingRight: "4px",
           }}
         >
-          {/* Theme toggle */}
+          {/* Theme toggle — desktop only */}
           <button
             onClick={toggleTheme}
             aria-label="Toggle theme"
+            className="hidden-mobile"
             style={{
               width: "34px",
               height: "34px",
@@ -295,10 +296,11 @@ export default function Header() {
             {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
 
-          {/* GitHub */}
+          {/* GitHub — desktop only */}
           <Link
             href="https://github.com/Amanullah23"
             target="_blank"
+            className="hidden-mobile"
             style={{
               display: "flex",
               alignItems: "center",
@@ -309,13 +311,14 @@ export default function Header() {
               textDecoration: "none",
               borderRadius: "9999px",
               transition: "all 0.18s ease",
+              whiteSpace: "nowrap",
             }}
           >
             <GitHubIcon size={15} />
-            <span className="hidden-mobile">GitHub</span>
+            GitHub
           </Link>
 
-          {/* Hire Me pill button */}
+          {/* Hire Me pill button — shown on both desktop and mobile */}
           <Link
             href={isHome ? "#contact" : "/"}
             onClick={(e) => {
@@ -443,11 +446,64 @@ export default function Header() {
                     })(),
                   ],
             )}
+
+            {/* GitHub + Theme toggle — mobile only, inside the dropdown */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "14px 24px",
+                borderBottom: "1px solid var(--card-border)",
+              }}
+            >
+              <Link
+                href="https://github.com/Amanullah23"
+                target="_blank"
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontSize: "14px",
+                  color: "var(--text-secondary)",
+                  textDecoration: "none",
+                }}
+              >
+                <GitHubIcon size={16} />
+                GitHub
+              </Link>
+
+              <button
+                onClick={toggleTheme}
+                aria-label="Toggle theme"
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "var(--card-bg)",
+                  border: "1px solid var(--card-border)",
+                  borderRadius: "50%",
+                  color: "var(--text-secondary)",
+                  cursor: "pointer",
+                }}
+              >
+                {theme === "dark" ? (
+                  <SunIcon size={14} />
+                ) : (
+                  <MoonIcon size={14} />
+                )}
+              </button>
+            </div>
+
             <div style={{ padding: "12px 16px" }}>
               <Link
                 href={isHome ? "#contact" : "/"}
                 onClick={(e) => {
                   trackEvent("hire_me_click");
+                  setMobileOpen(false);
                   if (isHome) {
                     scrollToSection(e, "contact");
                   } else {
