@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import ThreadsQuote from "@/components/ThreadsQuote";
 import AIDemo from "@/components/AIDemo";
 
 const tools = [
@@ -120,6 +121,9 @@ export default function AIPage() {
             processing, and client work — not a buzzword I attach to a project.
             Here&apos;s exactly how, with real examples.
           </p>
+        </div>
+        <div style={{ marginTop: "40px" }}>
+          <ThreadsQuote />
         </div>
       </section>
 
