@@ -8,6 +8,7 @@ import Awards from "@/components/Awards";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ScrollHandler from "@/components/ScrollHandler";
+import CodeShowcase from "@/components/CodeShowcase";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <ScrollHandler />
       <Header />
       <Hero />
+      <CodeShowcase />
       <About />
       <Process />
       <Projects />
