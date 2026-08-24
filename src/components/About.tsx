@@ -66,7 +66,7 @@ export default async function About() {
               color: "var(--text-secondary)",
               lineHeight: 1.7,
               maxWidth: "560px",
-              margin: "0 auto",
+              margin: "0 auto 16px",
             }}
           >
             I&apos;ve spent 7+ years moving from hands-on development into
@@ -74,6 +74,17 @@ export default async function About() {
             shipping my own products instead of only working on other
             people&apos;s. Here&apos;s the path that got me here.
           </p>
+          <a
+            href="/my-story"
+            style={{
+              fontSize: "13.5px",
+              fontWeight: 600,
+              color: "#34D399",
+              textDecoration: "none",
+            }}
+          >
+            Read My Full Story →
+          </a>
         </div>
 
         <AboutTimeline entries={entries} />
